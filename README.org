@@ -177,10 +177,6 @@ find /mnt/user -maxdepth 9999 -noleaf -type f -name ".DS_Store" -exec rm "{}" \;
 
 - [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/18/#comment-1014400][Edit suggestion]] by [[https://forums.unraid.net/profile/127556-itsalljustdata/][itsalljustdata]]
 
-*** Have a file with the folders containing movies and tvshows
-
-- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-491617][Script]] by [[https://forums.unraid.net/profile/7478-dheg/][dheg]]
-
 *** Move a folder when disk utilization exceeded
 
 - [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=3#comment-523771][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
@@ -199,6 +195,10 @@ find /mnt/user -maxdepth 9999 -noleaf -type f -name ".DS_Store" -exec rm "{}" \;
 - [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/10/#comment-730875][Script]] by [[https://forums.unraid.net/profile/70612-kri-kri/][kri kri]]
 
 ** Drives content
+
+*** Report of the folders containing movies and tvshows
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-491617][Script]] by [[https://forums.unraid.net/profile/7478-dheg/][dheg]]
 
 *** Catalog drive content
 
