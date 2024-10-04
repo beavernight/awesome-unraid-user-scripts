@@ -1,0 +1,442 @@
+* Awesome Unraid User Scripts
+
+This page is a collection of User Scripts for the [[https://forums.unraid.net/forum/index.php?topic=49992.0][Unraid User Scripts Plugin]] I made on my spare time. The list is far from complete but should give newcomers (like me when I made this list) and returning tinkerers a good starting point to get ideas and inspiration for their own scripting.
+
+Most of the scripts included here come from the [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/][Additional Scripts For User.Scripts Plugin]] topic on the Unraid forums, there are other sources too: other Unraid forum topics, Reddit, GitHub, etc. Some of them are outdated and have been replaced by plugins, however they will be kept here so that you can explore them as examples to craft you own thing.
+
+If you need more information on how to run scheduled script, see: https://crontab.guru/
+
+#+begin_quote
+[!TIP]
+If you are interested in a script you found in [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/][Additional Scripts For User.Scripts Plugin]] and want to implement it in your own system, I strongly advise you to look for later user's comments correcting/fixing the OP script. I could not possibly document everything here as it would take too much time.
+#+end_quote
+
+#+begin_quote
+[!WARNING]
+Before running anything on your machine please make your own code verification and own testing before running it on important and/or critical data. *No one will be responsible for what happened except you!*
+#+end_quote
+
+** Table of contents
+:PROPERTIES:
+:TOC:      :include all :ignore (this)
+:END:
+
+:CONTENTS:
+- [[#awesome-unraid-user-scripts][Awesome Unraid User Scripts]]
+  - [[#default-scripts-included-in-the-plugin][Default Scripts included in the Plugin]]
+  - [[#array--pools-management][Array & Pools management]]
+    - [[#move-files-where-they-belong][Move files where they belong]]
+    - [[#record-disk-assignments][Record Disk Assignments]]
+    - [[#enable--disable-turbo-write-mode][Enable / Disable Turbo Write Mode]]
+    - [[#auto-set-turbo-mode-based-on-drives-spun-up][Auto set turbo mode based on drives spun up]]
+    - [[#run-mover-at-a-certain-utilization-threshold][Run mover at a certain utilization threshold]]
+    - [[#run-a-custom-script-at-parity-check--rebuild-start-and-stop][Run A Custom Script At Parity Check / Rebuild Start And Stop]]
+    - [[#set-of-utilities-to-move-files-between-disks][Set of utilities to move files between disks]]
+    - [[#rsync-files-between-array-and-pool][Rsync files between array and pool]]
+    - [[#invoke-mover][Invoke Mover]]
+  - [[#mediafile-management][Media/file management]]
+    - [[#delete-ds_store-default][Delete .DS_Store (default)]]
+    - [[#a-script-to-have-a-file-with-the-folders-containing-movies-and-tvshows][A script to have a file with the folders containing movies and tvshows]]
+    - [[#move-a-folder-when-disk-utilization-exceeded][Move a folder when disk utilization exceeded]]
+    - [[#remove-spaces-from-file][Remove spaces from file]]
+    - [[#folder-from-filename][Folder from filename]]
+    - [[#photos-exif-rename-and-move][Photos exif rename and move]]
+  - [[#drives-content][Drives content]]
+    - [[#catalog-drive-contents][Catalog drive contents]]
+    - [[#tree-of-disks-content][Tree of disks' content]]
+  - [[#health-checkups][Health checkups]]
+    - [[#smart-checkups][SMART checkups]]
+    - [[#scheduled-checks-for-out-of-memory-errors][Scheduled checks for Out Of Memory Errors]]
+    - [[#check-plugin-integrity][Check Plugin integrity]]
+  - [[#hdd-management][HDD management]]
+    - [[#fstrim][fstrim]]
+    - [[#clear-an-unraid-data-drive][Clear an Unraid Data Drive]]
+    - [[#shred-data-on-hdd][Shred data on HDD]]
+    - [[#spin-up-all-drives-at-certain-times-of-day][Spin up all drives at certain times of day]]
+    - [[#scheduled-scrubs][Scheduled Scrubs]]
+  - [[#backups][Backups]]
+    - [[#backup-mysql-folder][Backup MySQL Folder]]
+    - [[#backup-vm-xml-files-and-ovmf-nvram-files][Backup VM XML files and ovmf nvram files]]
+    - [[#automatically-save-syslog-onto-flash-drive][Automatically save syslog onto flash drive]]
+    - [[#latest-super-easy-method-for-automated-flash-zip-backup][Latest (super easy) method for automated flash zip backup]]
+    - [[#borg-backup][Borg backup]]
+    - [[#backup-plex-database][Backup Plex database]]
+    - [[#appdata-backup][appdata/ backup]]
+  - [[#docker-containers][Docker containers]]
+    - [[#delete-dangling-docker-images-default][Delete dangling Docker images (default)]]
+    - [[#view-docker-log-size-default][View Docker log size (default)]]
+    - [[#trim-docker-logs][Trim Docker logs]]
+    - [[#clean-docker-logs][Clean Docker logs]]
+    - [[#start-and-stop-docker-container][Start and stop Docker container]]
+    - [[#size-of-running-docker-containers][Size of running Docker containers]]
+    - [[#clear-out-the-index-database-of-a-syncthing-docker-container][Clear out the index database of a Syncthing Docker container]]
+    - [[#enable-hardware-decoding-in-plex][Enable Hardware Decoding In Plex]]
+  - [[#virtual-machines][Virtual machines]]
+    - [[#custom-vm-icons][Custom VM icons]]
+    - [[#resume-paused--suspended-vms-or-start-shut-off-vms][Resume paused / suspended VMs or Start shut off vms]]
+    - [[#usb-hotplug-for-vms-with-no-passthrough][USB Hotplug for VMs with no passthrough]]
+    - [[#enable--disable-nested-vm][Enable / Disable nested VM]]
+  - [[#gpu][GPU]]
+    - [[#kick-nvidia-gpu-into-idle-at-startup][Kick Nvidia GPU into idle at startup]]
+  - [[#security][Security]]
+    - [[#auto-renew-lets-encrypt-certificates][Auto-renew Let's Encrypt certificates]]
+  - [[#notifications][Notifications]]
+    - [[#cron-job-notify][Cron job notify]]
+    - [[#send-server-status-to-phone][Send server status to phone]]
+  - [[#misc][Misc]]
+    - [[#lock-file-to-prevent-script-from-running][Lock file to prevent script from running]]
+    - [[#play-pacman-on-your-server][Play PacMan on your server]]
+    - [[#allow-unraid-to-utilize-the-full-width-of-the-browser][Allow Unraid to utilize the full width of the browser]]
+    - [[#convert-files-from-dos-to-linux-format][Convert files from DOS to linux format]]
+    - [[#unraid-gui-bleeding-edge-toolkit][Unraid GUI Bleeding Edge Toolkit]]
+  - [[#collections-of-scripts][Collections of scripts]]
+    - [[#trash-collection-of-unraid-userscripts][TRaSH Collection of unRAID userscripts]]
+    - [[#daps-drazzilbs-arr-pmm-scripts][DAPS (Drazzilb's Arr PMM Scripts)]]
+  - [[#contribute][Contribute]]
+:END:
+
+** Default Scripts included in the Plugin
+
+Default scripts provided with the plugin (also included in categories below too): 
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-480177][Script]]
+
+** Array & Pools management
+
+*** Move files where they belong
+
+Fix files stored on the Array for cache-only shares and the reverse:
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-480178][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/16/#comment-926672][Edit suggestion]] by [[https://forums.unraid.net/profile/10146-icdeadppl/][ICDeadPpl]]
+
+*** Record disk assignments
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-481688][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+*** Enable / Disable turbo write mode
+
+#+begin_quote
+[!WARNING]
+Outdated: use [[https://forums.unraid.net/topic/55671-plugin-ca-auto-turbo-write-mode/][Auto Turbo Plugin]] instead ([[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/14/#comment-824650][Squid's comment]]).
+#+end_quote
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-481692][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+*** Auto set turbo mode based on drives spun up
+
+#+begin_quote
+[!WARNING]
+Outdated: use [[https://forums.unraid.net/topic/55671-plugin-ca-auto-turbo-write-mode/][Auto Turbo Plugin]] instead ([[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/14/#comment-824650][Squid's comment]]).
+#+end_quote
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-481700][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+  
+*** Run mover at a certain utilization threshold
+
+#+begin_quote
+[!WARNING]
+Outdated: use [[https://forums.unraid.net/topic/70783-plugin-mover-tuning/][Mover Tuner Plugin]] instead ([[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/14/#comment-817917][Squid's comment]]).
+#+end_quote
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-481498][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-483789][Edit]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/14/#comment-808579][Variation]] by [[https://forums.unraid.net/profile/70898-dzmm/][DZMM]]
+
+*** Run a custom script at parity check / rebuild start and stop
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=2#comment-507047][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+*** Set of utilities to move files between disks
+
+- [[https://forums.unraid.net/topic/34547-diskmv-a-set-of-utilities-to-move-files-between-disks/page/2/#comment-391785][Topic]] by [[https://forums.unraid.net/profile/4844-freddie/][Freddie]]
+
+*** Rsync files between array and pool
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/13/#comment-783388][Request]] by [[https://forums.unraid.net/profile/24895-rorton/][rorton]]
+
+*** Invoke Mover
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/18/#comment-1052583][Request]] by [[https://forums.unraid.net/profile/6274-hernandito/][hernandito]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/18/#comment-1052635][Script]] by [[https://forums.unraid.net/profile/127556-itsalljustdata/][itsalljustdata]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/19/#comment-1059627][Edit for encrypted array]] by [[https://forums.unraid.net/profile/127556-itsalljustdata/][itsalljustdata]]
+
+** Media/file management
+
+*** Delete =.DS_Store= (default)
+
+#+begin_src bash
+#!/bin/bash
+#name=default.delete-dsstore 
+#description=This script will delete all .DS_Store files on your array created by Apple's Finder
+
+echo "Searching for (and deleting) .DS_Store Files"
+echo "This may take a awhile"
+find /mnt/user -maxdepth 9999 -noleaf -type f -name ".DS_Store" -exec rm "{}" \;
+#+end_src
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/18/#comment-1014400][Edit suggestion]] by [[https://forums.unraid.net/profile/127556-itsalljustdata/][itsalljustdata]]
+
+*** Have a file with the folders containing movies and tvshows
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-491617][Script]] by [[https://forums.unraid.net/profile/7478-dheg/][dheg]]
+
+*** Move a folder when disk utilization exceeded
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=3#comment-523771][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+*** Remove spaces from file
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=4#comment-573858][Script]] by [[https://forums.unraid.net/profile/2384-kizer/][kizer]]
+
+*** Folder from filename
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=4#comment-573858][Script]] by [[https://forums.unraid.net/profile/2384-kizer/][kizer]]
+
+*** Photos exif rename and move
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/9/#comment-686437][Request]] by [[https://forums.unraid.net/profile/618-johnieutah/][johnieutah]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/10/#comment-730875][Script]] by [[https://forums.unraid.net/profile/70612-kri-kri/][kri kri]]
+
+** Drives content
+
+*** Catalog drive content
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/3#comment-516674][Script]] by [[https://forums.unraid.net/profile/1219-clunkclunk/][ClunkClunk]]
+
+*** Tree of disks content
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/3/#comment-517400][Script]] by [[https://forums.unraid.net/profile/965-glave/][glave]]
+
+** Health checkups
+
+*** SMART checkups
+
+- [[https://old.reddit.com/r/unRAID/comments/18ygc8y/any_essential_or_custom_user_scripts_you_use/ljj2r5e/][Ideas]] by [[https://old.reddit.com/user/hamster2k3][hamster2k3]]
+
+*** Scheduled checks for Out Of Memory Errors
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/3/#comment-526022][Script]] by [[https://forums.unraid.net/profile/9691-helmonder/][Helmonder]]
+
+*** Check Plugin integrity
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/6/#comment-605244][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+** HDD management
+
+*** fstrim
+
+- [[https://forums.unraid.net/topic/48286-plugin-ca-user-scripts/#comment-475653][Idea]] by [[https://forums.unraid.net/profile/70144-testdasi/][testdasi]]
+
+*** Clear an Unraid data drive
+
+#+begin_quote
+[!IMPORTANT]
+Since this script is quite old, it seems to be causing a lot of errors for users trying to run it for the first time. When running the script the users report a stale status (waiting indefinitely) or very slow progress with drive clear with speed of around ~1 MB/s.
+
+Make sure you are checking the most up to date posts made by other users (there are a lot of them). [[https://forums.unraid.net/profile/353-jorgeb/][JorgeB]] mentionned several times ([[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/6/#comment-611508][1]], [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/13/#comment-798211][2]], [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/15/#comment-850539][3]], [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/16/#comment-928073][4]]) to do the procedure [[https://forums.unraid.net/topic/61614-shrink-array-question/#comment-606335][manually]].
+
+More info on the topic: https://docs.unraid.net/legacy/FAQ/shrink-array/
+#+end_quote
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-490808][Script]] by [[https://forums.unraid.net/profile/189-robj/][RobJ]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/20/#comment-1153524][Edit for Unraid 6.10]] by [[https://forums.unraid.net/profile/103901-majyk-oyster/][Majyk Oyster]]
+
+*** Shred data on HDD
+
+#+begin_quote
+[!TIP]
+Might be better to use the [[https://forums.unraid.net/topic/120567-unassigned-devices-preclear-a-utility-to-preclear-disks-before-adding-them-to-the-array/][Unassigned Devices Preclear Plugin]] ([[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/20/#comment-1154046][JonathanM's comment]]).
+#+end_quote
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/20/#comment-1153872][Script]] by [[https://forums.unraid.net/profile/103901-majyk-oyster/][Majyk Oyster]]
+
+*** Spin up all drives at certain times of day
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=10#comment-714646][Script]] by [[https://forums.unraid.net/profile/645-cessquill/][Cessquill]]
+
+*** Scheduled scrubs
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=3#comment-526022][Script]] by [[https://forums.unraid.net/profile/9691-helmonder/][Helmonder]]
+
+** Backups
+
+*** Backup MySQL folder
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-480298][Script]] by [[https://forums.unraid.net/profile/6274-hernandito/][hernandito]]
+
+*** Backup VM XML files and OVMF NVRAM files
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=2#comment-501707][Script]] by [[https://forums.unraid.net/profile/67288-spaceinvaderone/][SpaceInvaderOne]]
+
+*** Automatically save syslog onto flash drive
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/5/#comment-581595][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+*** Automated flash zip backup
+
+- [[https://forums.unraid.net/topic/100202-latest-super-easy-method-for-automated-flash-zip-backup/][Topic]] by [[https://forums.unraid.net/profile/96222-cpt-chaz/][Cpt. Chaz]]
+
+*** Borg backup
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/14/#comment-821297][Script]] by [[https://forums.unraid.net/profile/56296-guru69/][guru69]]
+
+*** Backup Plex database
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/16/#comment-925745][Script]] by [[https://forums.unraid.net/profile/75588-energen/][Energen]]
+
+*** =appdata/= backup
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/23/#comment-1345833][Script]] by [[https://forums.unraid.net/profile/270050-hyperworx/][HyperWorx]]
+
+** Docker containers
+
+*** Delete dangling Docker images (default) 
+
+#+begin_src bash
+#!/bin/bash
+#name=default.delete-dangling-images
+#description=This simple script will delete any "dangling" images within your docker.img file
+
+docker rmi $(docker images --quiet --filter "dangling=true")
+
+echo Finished
+echo if an error shows above, no dangling images were found to delete
+#+end_src
+
+*** View Docker log size (default)
+
+#+begin_src bash
+#!/bin/bash
+#name=default.view-docker-log-size 
+#description=This script will display the size of your docker logs, so you can see if runaway logging is contributing to your docker.img file filling up
+
+du -ah /var/lib/docker/containers/ | grep -v "/$" | sort -rh | head -60 | grep .log
+#+end_src
+
+*** Trim Docker logs
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/21/#comment-1206249][Script]] by [[https://forums.unraid.net/profile/67736-joeunraiduser/][JoeUnraidUser]]
+
+*** Clean Docker logs
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/#comment-480297][Script]] by [[https://forums.unraid.net/profile/6274-hernandito/][hernandito]]
+
+*** Start and stop Docker container
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/10/#comment-734926][Script]] by [[https://forums.unraid.net/profile/79141-bastl/][bastl]]
+
+*** Size of running Docker containers
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/8/#comment-681837][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/8/#comment-682421][Edit]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+
+*** Clear out the index database of a Syncthing Docker container
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/16/#comment-871460][Script]] by [[https://forums.unraid.net/profile/75588-energen/][Energen]]
+
+*** Enable Hardware Decoding In Plex
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=10#comment-725091][Script]] by [[https://forums.unraid.net/profile/645-cessquill/][Cessquill]]
+
+** Virtual machines
+
+*** Custom VM icons
+
+Automatically download from repo and install custom VM icons to vm manager:
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/2/#comment-501757][Script]] by [[https://forums.unraid.net/profile/67288-spaceinvaderone/][SpaceInvaderOne]]
+
+*** Resume paused / suspended VMs or start shut off VMs
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=3#comment-524219][Script]] by [[https://forums.unraid.net/profile/70206-thomast_88/][thomast_88]]
+
+*** USB Hotplug for VMs with no passthrough
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=4#comment-532119][Script]] by [[https://forums.unraid.net/profile/10290-squid/][Squid]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=9#comment-697568][Revision]] by [[https://forums.unraid.net/profile/86551-oliverde8/][oliverde8]]
+
+*** Enable / Disable nested VM
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=4#comment-540298][Script]] by [[https://forums.unraid.net/profile/67288-spaceinvaderone/][SpaceInvaderOne]]
+
+** GPU
+
+*** Kick Nvidia GPU into idle at startup
+
+[[https://old.reddit.com/r/unRAID/comments/18ygc8y/any_essential_or_custom_user_scripts_you_use/kgaqxad/][Script]] by [[https://old.reddit.com/user/Vchat20][Vchat20]]:
+
+#+begin_quote
+A simple but very useful one that another helpful user here informed me of a while back is to kick Nvidia GPU's into an idle power state on bootup. If you're running Unraid in CLI mode and the GPU is only used in Docker containers and not passed through to a VM, the default state at boot will be to run at full power until a task actually uses it then it settles down.
+
+#+begin_src bash
+#!/bin/bash
+#set persistence mode
+nvidia-smi -pm 1
+#+end_src
+
+This is set to start at the first array start in my config
+#+end_quote
+
+** Security
+
+*** Auto-renew Let's Encrypt certificates
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/13/#comment-746350][Script 1]] by [[https://forums.unraid.net/profile/79055-aluavin/][Aluavin]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/21/#comment-1157037][Script 2]] by [[https://forums.unraid.net/profile/168998-thelargefries/][TheLargeFries]]
+
+** Notifications
+
+*** Cron job notify
+
+- [[https://forums.unraid.net/topic/61996-cron-jobs-notify/#comment-607842][Topic]] by [[https://forums.unraid.net/profile/2736-bonienl/][bonienl]]
+
+*** Send server status to phone
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=2#comment-498105][Script]] by [[https://forums.unraid.net/profile/67288-spaceinvaderone/][SpaceInvaderOne]]
+
+** Misc
+
+*** Lock file to prevent script from running
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/17/#comment-958494][Request]] by [[https://forums.unraid.net/profile/113303-questionbot/][questionbot]]
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/17/#comment-958497][Script]] by [[https://forums.unraid.net/profile/62359-ken-ji/][ken-ji]]
+
+*** Play PacMan on your server
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=3#comment-527888][Script]] by [[https://forums.unraid.net/profile/67288-spaceinvaderone/][SpaceInvaderOne]]
+
+*** Allow Unraid to utilize the full width of the browser
+
+Instead of limited to 1920px.
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/7/#comment-652876][Script]] by [[https://forums.unraid.net/profile/67288-spaceinvaderone/][SpaceInvaderOne]]
+
+*** Convert files from DOS to linux format
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/page/13/#comment-767354][Script]] by [[https://forums.unraid.net/profile/67736-joeunraiduser/][JoeUnraidUser]]
+
+*** Unraid GUI Bleeding Edge Toolkit
+
+- [[https://forums.unraid.net/topic/48707-additional-scripts-for-userscripts-plugin/?page=7#comment-640443][Script]] by [[https://forums.unraid.net/profile/61877-ljm42/][ljm42]]
+
+** Collections of scripts
+
+Other collections of scripts:
+
+*** TRaSH Collection of unRAID userscripts
+
+[[https://github.com/TRaSH-/userScripts-and-Configs/tree/main/scripts][GitHub repository]]
+
+*** DAPS (Drazzilb's Arr PMM Scripts)
+
+A collection of useful scripts for media management and automation.
+
+[[https://github.com/Drazzilb08/daps][GitHub repository]]
+
+** Contribute
+
+I am not an Unraid expert and haven't tested all the scripts, so there may be some mistakes! If you want to contribute you can either:
+
+1. Make a pull request via GitHub
+2. PM [[https://forums.unraid.net/profile/271634-nightbeaver/][me]] directly via the Unraid forums
